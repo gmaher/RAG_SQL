@@ -1,6 +1,7 @@
 import os
 from glob import glob
 from tqdm import tqdm
+import argparse
 
 from openai import OpenAI
 
@@ -17,6 +18,11 @@ class Document(SQLBase):
     __tablename__ = "Document"
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
     content = sqlalchemy.Column(sqlalchemy.Text, nullable=False)
+
+#Input arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('-q', type=str, help="Question to answer")
+args = parser.parse_args()
 
 #create db
 DB_URI = 'sqlite:///DOCS.db'
@@ -45,7 +51,7 @@ for f in tqdm(filenames):
 session.commit()
 
 #User query
-question = "What events did Sarah Claxton compete in?"
+question = args.q
 
 #RAG SQL
 client = OpenAI()
